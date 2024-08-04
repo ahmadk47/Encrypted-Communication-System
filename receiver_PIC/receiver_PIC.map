@@ -1,0 +1,50 @@
+MPLINK 4.49, Linker
+Linker Map File - Created Sat Jan 07 17:49:19 2023
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000004    program   0x000104
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000004    0x000085      
+            131 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                  Decrypt   0x00002d    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                      ISR   0x00006f    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                    LOOP1   0x000031    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                  Receive   0x000073    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                    START   0x000005    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                     load   0x000083    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                     loop   0x000075    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                    loop1   0x00002a    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                   timer0   0x00007b    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    START   0x000005    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                    loop1   0x00002a    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                  Decrypt   0x00002d    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                    LOOP1   0x000031    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                      ISR   0x00006f    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                  Receive   0x000073    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                     loop   0x000075    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                   timer0   0x00007b    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+                     load   0x000083    program     static D:\embedded_project0\receiver_PIC\receiver_PIC.asm
+
+

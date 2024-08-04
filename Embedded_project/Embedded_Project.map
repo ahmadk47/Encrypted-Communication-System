@@ -1,0 +1,70 @@
+MPLINK 4.49, Linker
+Linker Map File - Created Sat Jan 07 18:37:22 2023
+
+                                 Section Info
+                  Section       Type    Address   Location Size(Bytes)
+                ---------  ---------  ---------  ---------  ---------
+                   .org_0       code   0x000000    program   0x000000
+                   .org_1       code   0x000000    program   0x000002
+                   .org_2       code   0x000004    program   0x000138
+
+
+
+                              Program Memory Usage 
+                               Start         End      
+                           ---------   ---------      
+                            0x000000    0x000000      
+                            0x000004    0x00009f      
+            157 out of 8454 program addresses used, program memory utilization is 1%
+
+
+
+                              Symbols - Sorted by Name
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                  EXT_INT   0x00008f    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                  Encrypt   0x00004c    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                      ISR   0x00008a    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                     LOOP   0x000050    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    NOTZ1   0x00002e    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    NOTZ2   0x000036    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    NOTZ3   0x000041    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    NOTZ4   0x000049    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    Start   0x000005    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                       TX   0x000092    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                     WAIT   0x000023    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    Zero1   0x000029    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    Zero2   0x000033    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    Zero3   0x00003c    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    Zero4   0x000046    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                 checkSW3   0x000039    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                     done   0x00009f    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                getValues   0x000026    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                     loop   0x000094    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+
+
+
+                              Symbols - Sorted by Address
+                     Name    Address   Location    Storage File                     
+                ---------  ---------  ---------  --------- ---------                
+                    Start   0x000005    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                     WAIT   0x000023    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                getValues   0x000026    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    Zero1   0x000029    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    NOTZ1   0x00002e    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    Zero2   0x000033    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    NOTZ2   0x000036    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                 checkSW3   0x000039    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    Zero3   0x00003c    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    NOTZ3   0x000041    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    Zero4   0x000046    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                    NOTZ4   0x000049    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                  Encrypt   0x00004c    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                     LOOP   0x000050    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                      ISR   0x00008a    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                  EXT_INT   0x00008f    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                       TX   0x000092    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                     loop   0x000094    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+                     done   0x00009f    program     static D:\embedded_project0\Embedded_project\Embedded_Project.asm
+
+

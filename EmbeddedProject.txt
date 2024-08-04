@@ -1,0 +1,201 @@
+#include "P16F877A.inc"
+	cblock 0x20
+	Key1H 
+	Key1L
+	Key2H
+	Key2L
+	Key3H
+	Key3L
+	NumOfRounds
+	RL 
+	RH	
+	TEMP1
+	TEMP2
+	TEMP3
+	SWITCH
+	endc
+	org 0x0000
+	goto Start
+	org 0x0004
+	goto ISR
+Start
+	movlw D'2'
+	movwf NumOfRounds
+	movlw 0x25
+	movwf Key1L
+	movlw 0x40
+	movwf Key1H
+	movlw 0xB3
+	movwf Key2L
+	movlw 0x4E
+	movwf Key2H
+	movlw 0x2D
+	movwf Key3L
+	movlw 0x6B
+	movwf Key3H
+	bsf STATUS, RP0 ;select Bank1
+	bcf STATUS, RP1
+	bsf INTCON, INTE ;setting the external interrupts enable
+	bsf OPTION_REG, INTEDG ; interrupt on rising edge
+	bsf INTCON, GIE ;setting global interrupts enable
+	bsf INTCON, PEIE
+	movlw B'00001111' ;configure RD3-RD0 as input
+	movwf TRISD
+	bcf TRISC, 6 ;configure RC6 as output
+	bcf STATUS, RP0 ;select Bank0
+
+WAIT goto WAIT
+
+Encrypt	clrw
+	bcf STATUS, C
+LOOP
+	movf RL, W	;XORING with key 1 then rotating
+	xorwf Key1L, W
+	movwf RL
+	movwf TEMP1
+	movf RH, W
+	xorwf Key1H, W
+	movwf RH
+	btfsc RH, 7
+	bsf STATUS, C
+	rlf  RL, W
+	movwf RL
+	bcf STATUS, C
+	btfsc TEMP1,7
+	bsf STATUS, C
+	rlf RH, W
+	movwf RH
+	bcf STATUS, C
+
+	movf RL, W	;XORING with key 2 then rotating
+	xorwf Key2L, W
+	movwf RL
+	movwf TEMP2
+	movf RH, W
+	xorwf Key2H, W
+	movwf RH
+	btfsc RH, 7
+	bsf STATUS, C
+	rlf  RL, W
+	movwf RL
+	bcf STATUS, C
+	btfsc TEMP2, 7
+	bsf STATUS, C
+	rlf RH, W
+	movwf RH
+	bcf STATUS, C
+
+	movf RL, W	;XORING with key 3 then rotating
+	movwf RL
+	xorwf Key3L, W
+	movwf TEMP3
+	movf RH, W
+	xorwf Key3H, W
+	movwf RH
+	btfsc RH, 7
+	bsf STATUS, C
+	rlf  RL, W
+	movwf RL
+	bcf STATUS, C
+	btfsc TEMP3, 7
+	bsf STATUS, C
+	rlf RH, W
+	movwf RH
+	bcf STATUS, C
+
+	decfsz NumOfRounds ,1
+	goto LOOP
+	bsf PIE1, TXIE
+	
+
+ISR 
+	bcf STATUS,RP0
+	btfsc INTCON, INTF
+	goto EXTI
+	btfsc PIR1, TXIF
+	goto TX
+
+EXTI
+	movf PORTD, W
+	movwf SWITCH
+	btfss SWITCH, 0
+	goto NOTZ1
+	goto Zero1
+Zero1
+	btfsc SWITCH, 1
+	goto Zero2
+	movlw 0x71 ;F
+	movwf RH
+	goto checkSW3
+
+Zero2
+	movlw 0x77;A
+	movwf RH
+	goto checkSW3
+
+NOTZ1
+	btfss SWITCH, 1
+	goto NOTZ2
+	movlw 0x3F;0
+	movwf RH
+	goto checkSW3
+
+NOTZ2
+	movlw 0x6D;5
+	movwf RH
+	goto checkSW3
+
+checkSW3
+	btfsc SWITCH, 2
+	goto Zero3
+	goto NOTZ3
+Zero3
+	btfsc SWITCH, 3
+	goto Zero4
+	movlw 0x5B;2
+	movwf RL
+	bcf INTCON, INTF
+	goto Encrypt
+Zero4
+	movlw 0x5E;D
+	movwf RL
+	bcf INTCON, INTF	
+	goto Encrypt
+NOTZ3
+	btfsc SWITCH, 3
+	goto NOTZ4
+	movlw 0x66;4
+	movwf RL
+	bcf INTCON, INTF
+	goto Encrypt
+NOTZ4
+	movlw 0x38;L
+	movwf RL
+	bcf INTCON, INTF
+	goto Encrypt
+
+
+TX
+	bsf STATUS, RP0
+	bcf TXSTA, SYNC
+	bsf RCSTA, SPEN
+	bsf TXSTA, BRGH
+	movlw D'25'
+	movwf SPBRG
+	bsf TXSTA, TXEN
+	bcf STATUS, RP0 ; select bank0 
+	bsf RCSTA, SPEN ; enable serial transmission
+	movlw 0x27
+	movwf FSR
+loop  movf INDF, W
+	movwf TXREG
+	incf FSR, F
+	movf FSR,W
+	sublw 0x29
+	btfss STATUS, Z
+	goto loop
+	goto done
+	retfie
+	
+done nop
+end	

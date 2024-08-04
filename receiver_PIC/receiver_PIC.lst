@@ -1,0 +1,652 @@
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 #include "P16F877A.inc"
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ;  MPASM PIC16F877A processor include
+                      00005 ; 
+                      00006 ;  (c) Copyright 1999-2013 Microchip Technology, All rights reserved
+                      00007 ;==========================================================================
+                      00008 
+                      00566         LIST
+                      00002         cblock 0x20
+  00000020            00003         Key1L 
+  00000021            00004         Key1H
+  00000022            00005         Key2L
+  00000023            00006         Key2H
+  00000024            00007         Key3L
+  00000025            00008         Key3H
+  00000026            00009         NumOfRounds
+  00000027            00010         RL
+  00000028            00011         RH
+  00000029            00012         TEMP1
+  0000002A            00013         TEMP2
+  0000002B            00014         TEMP3
+  0000002C            00015         check
+  0000002D            00016         COUNTER
+                      00017         endc
+                      00018 
+0000                  00019         org 0x0000
+0000   2805           00020         goto START
+0004                  00021         org 0x0004
+0004   286F           00022         goto ISR
+                      00023 
+0005                  00024 START
+0005   3005           00025         movlw D'5'
+0006   00AD           00026         movwf COUNTER
+0007   0188           00027         clrf PORTD
+0008   0186           00028         clrf PORTB
+0009   0187           00029         clrf PORTC
+000A   3025           00030         movlw 0x25
+000B   00A0           00031         movwf Key1L
+000C   3040           00032         movlw 0x40
+000D   00A1           00033         movwf Key1H
+000E   30B3           00034         movlw 0xB3
+000F   00A2           00035         movwf Key2L
+0010   304E           00036         movlw 0x4E
+0011   00A3           00037         movwf Key2H
+0012   302D           00038         movlw 0x2D
+0013   00A4           00039         movwf Key3L
+0014   306B           00040         movlw 0x6B
+0015   00A5           00041         movwf Key3H
+0016   1683           00042         bsf STATUS, RP0 ;select Bank1
+0017   178B           00043         bsf INTCON, GIE ;setting global interrupts enable
+0018   168B           00044         bsf INTCON, TMR0IE
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0019   168C           00045         bsf PIE1, RCIE
+001A   170B           00046         bsf INTCON, PEIE
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001B   1218           00047         bcf TXSTA, SYNC
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001C   1007           00048         bcf TRISC, 0
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001D   1787           00049         bsf TRISC, 7
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001E   0188           00050         clrf TRISD
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+001F   0186           00051         clrf TRISB
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0020   1518           00052         bsf TXSTA, BRGH
+0021   3087           00053         movlw B'10000111'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0022   0081           00054         movwf OPTION_REG
+0023   3019           00055         movlw D'25'
+Message[302]: Register in operand not in bank 0.  Ensure that bank bits are correct.
+0024   0099           00056         movwf SPBRG
+0025   1283           00057         bcf STATUS, RP0
+0026   303D           00058         movlw D'61' ; preload T0, it overflows after 196 counts 
+0027   0081           00059         movwf TMR0
+0028   1798           00060         bsf RCSTA, SPEN
+0029   1618           00061         bsf RCSTA, CREN
+002A                  00062 loop1
+002A   1C2C           00063         btfss check,0
+002B   282A           00064         goto loop1
+002C   282D           00065         goto Decrypt
+                      00066 
+002D                  00067 Decrypt 
+002D   0103           00068         clrw
+002E   3002           00069         movlw D'2'
+002F   00A6           00070         movwf NumOfRounds
+0030   1003           00071         bcf STATUS,C
+0031                  00072 LOOP1
+0031   0827           00073         movf RL, W
+0032   00A9           00074         movwf TEMP1
+0033   1828           00075         btfsc RH, 0
+0034   1403           00076         bsf STATUS, C
+0035   0C27           00077         rrf  RL, W
+0036   00A7           00078         movwf RL
+0037   1003           00079         bcf STATUS, C
+0038   1829           00080         btfsc TEMP1,0
+0039   1403           00081         bsf STATUS, C
+003A   0C28           00082         rrf RH, W
+003B   00A8           00083         movwf RH
+003C   0827           00084         movf RL, W      
+003D   0624           00085         xorwf Key3L, W
+003E   00A7           00086         movwf RL
+003F   0828           00087         movf RH, W
+0040   0625           00088         xorwf Key3H, W
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0041   00A8           00089         movwf RH
+0042   1003           00090         bcf STATUS, C
+                      00091 
+0043   0827           00092         movf RL, W
+0044   00AA           00093         movwf TEMP2
+0045   1828           00094         btfsc RH, 0
+0046   1403           00095         bsf STATUS, C
+0047   0C27           00096         rrf  RL, W
+0048   00A7           00097         movwf RL
+0049   1003           00098         bcf STATUS, C
+004A   182A           00099         btfsc TEMP2,0
+004B   1403           00100         bsf STATUS, C
+004C   0C28           00101         rrf RH, W
+004D   00A8           00102         movwf RH
+004E   0827           00103         movf RL, W      
+004F   0622           00104         xorwf Key2L, W
+0050   00A7           00105         movwf RL
+0051   0828           00106         movf RH, W
+0052   0623           00107         xorwf Key2H, W
+0053   00A8           00108         movwf RH
+0054   1003           00109         bcf STATUS, C
+                      00110 
+                      00111         
+0055   0827           00112         movf RL, W
+0056   00AB           00113         movwf TEMP3
+0057   1828           00114         btfsc RH, 0
+0058   1403           00115         bsf STATUS, C
+0059   0C27           00116         rrf  RL, W
+005A   00A7           00117         movwf RL
+005B   1003           00118         bcf STATUS, C
+005C   182B           00119         btfsc TEMP3,0
+005D   1403           00120         bsf STATUS, C
+005E   0C28           00121         rrf RH, W
+005F   00A8           00122         movwf RH
+0060   0827           00123         movf RL, W      
+0061   0620           00124         xorwf Key1L, W
+0062   00A7           00125         movwf RL
+0063   0828           00126         movf RH, W
+0064   0621           00127         xorwf Key1H, W
+0065   00A8           00128         movwf RH
+0066   1003           00129         bcf STATUS, C
+                      00130 
+0067   0BA6           00131         decfsz NumOfRounds ,1
+0068   2831           00132         goto LOOP1
+                      00133 
+0069   0827           00134         movf RL, W
+006A   0088           00135         movwf PORTD
+006B   0828           00136         movf RH, W
+006C   0086           00137         movwf PORTB
+                      00138 
+006D   102C           00139         bcf check,0
+006E   282A           00140         goto loop1
+                      00141 
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE  4
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00142 
+006F                  00143 ISR
+006F   1A8C           00144         btfsc PIR1, RCIF
+0070   2873           00145         goto Receive
+0071   190B           00146         btfsc INTCON, TMR0IF
+0072   287B           00147         goto timer0
+0073                  00148 Receive
+0073   081A           00149         movf RCREG, W
+0074   00A8           00150         movwf RH
+0075                  00151 loop
+0075   1E8C           00152         btfss PIR1, RCIF
+0076   2875           00153         goto loop
+                      00154 
+0077   081A           00155         movf RCREG , W
+0078   00A7           00156         movwf RL
+0079   142C           00157         bsf check,0
+                      00158 
+007A   0009           00159         retfie
+                      00160 
+                      00161 
+007B                  00162 timer0  
+007B   110B           00163         bcf INTCON,TMR0IF ;clear Timer Overflow flag
+007C   0BAD           00164         decfsz COUNTER,F
+007D   2883           00165         goto load
+007E   3001           00166         movlw 0x01
+007F   0687           00167         xorwf PORTC , F
+0080   3005           00168         movlw D'5'
+0081   00AD           00169         movwf COUNTER
+0082   0009           00170         retfie
+                      00171 
+0083   303D           00172 load movlw D'61'
+0084   0081           00173         movwf TMR0
+0085   0009           00174         retfie
+                      00175 
+Warning[205]: Found directive in column 1. (end)
+                      00176 end
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE  5
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ACKDT                             00000005
+ACKEN                             00000004
+ACKSTAT                           00000006
+ADCON0                            0000001F
+ADCON1                            0000009F
+ADCS0                             00000006
+ADCS1                             00000007
+ADCS2                             00000006
+ADDEN                             00000003
+ADFM                              00000007
+ADIE                              00000006
+ADIF                              00000006
+ADON                              00000000
+ADRESH                            0000001E
+ADRESL                            0000009E
+BCLIE                             00000003
+BCLIF                             00000003
+BF                                00000000
+BRGH                              00000002
+C                                 00000000
+C1INV                             00000004
+C1OUT                             00000006
+C2INV                             00000005
+C2OUT                             00000007
+CCP1CON                           00000017
+CCP1IE                            00000002
+CCP1IF                            00000002
+CCP1M0                            00000000
+CCP1M1                            00000001
+CCP1M2                            00000002
+CCP1M3                            00000003
+CCP1X                             00000005
+CCP1Y                             00000004
+CCP2CON                           0000001D
+CCP2IE                            00000000
+CCP2IF                            00000000
+CCP2M0                            00000000
+CCP2M1                            00000001
+CCP2M2                            00000002
+CCP2M3                            00000003
+CCP2X                             00000005
+CCP2Y                             00000004
+CCPR1                             00000015
+CCPR1H                            00000016
+CCPR1L                            00000015
+CCPR2                             0000001B
+CCPR2H                            0000001C
+CCPR2L                            0000001B
+CHS0                              00000003
+CHS1                              00000004
+CHS2                              00000005
+CIS                               00000003
+CKE                               00000006
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE  6
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+CKP                               00000004
+CM0                               00000000
+CM1                               00000001
+CM2                               00000002
+CMCON                             0000009C
+CMIE                              00000006
+CMIF                              00000006
+COUNTER                           0000002D
+CREN                              00000004
+CSRC                              00000007
+CVR0                              00000000
+CVR1                              00000001
+CVR2                              00000002
+CVR3                              00000003
+CVRCON                            0000009D
+CVREN                             00000007
+CVROE                             00000006
+CVRR                              00000005
+D                                 00000005
+DATA_ADDRESS                      00000005
+DC                                00000001
+D_A                               00000005
+D_NOT_A                           00000005
+Decrypt                           0000002D
+EEADR                             0000010D
+EEADRH                            0000010F
+EECON1                            0000018C
+EECON2                            0000018D
+EEDATA                            0000010C
+EEDATH                            0000010E
+EEIE                              00000004
+EEIF                              00000004
+EEPGD                             00000007
+F                                 00000001
+FERR                              00000002
+FSR                               00000004
+GCEN                              00000007
+GIE                               00000007
+GO                                00000002
+GO_DONE                           00000002
+GO_NOT_DONE                       00000002
+I2C_DATA                          00000005
+I2C_READ                          00000002
+I2C_START                         00000003
+I2C_STOP                          00000004
+IBF                               00000007
+IBOV                              00000005
+INDF                              00000000
+INTCON                            0000000B
+INTE                              00000004
+INTEDG                            00000006
+INTF                              00000001
+IRP                               00000007
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE  7
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+ISR                               0000006F
+Key1H                             00000021
+Key1L                             00000020
+Key2H                             00000023
+Key2L                             00000022
+Key3H                             00000025
+Key3L                             00000024
+LOOP1                             00000031
+NOT_A                             00000005
+NOT_ADDRESS                       00000005
+NOT_BO                            00000000
+NOT_BOR                           00000000
+NOT_DONE                          00000002
+NOT_PD                            00000003
+NOT_POR                           00000001
+NOT_RBPU                          00000007
+NOT_RC8                           00000006
+NOT_T1SYNC                        00000002
+NOT_TO                            00000004
+NOT_TX8                           00000006
+NOT_W                             00000002
+NOT_WRITE                         00000002
+NumOfRounds                       00000026
+OBF                               00000006
+OERR                              00000001
+OPTION_REG                        00000081
+P                                 00000004
+PCFG0                             00000000
+PCFG1                             00000001
+PCFG2                             00000002
+PCFG3                             00000003
+PCL                               00000002
+PCLATH                            0000000A
+PCON                              0000008E
+PEIE                              00000006
+PEN                               00000002
+PIE1                              0000008C
+PIE2                              0000008D
+PIR1                              0000000C
+PIR2                              0000000D
+PORTA                             00000005
+PORTB                             00000006
+PORTC                             00000007
+PORTD                             00000008
+PORTE                             00000009
+PR2                               00000092
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+PSPIE                             00000007
+PSPIF                             00000007
+PSPMODE                           00000004
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE  8
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+R                                 00000002
+RA0                               00000000
+RA1                               00000001
+RA2                               00000002
+RA3                               00000003
+RA4                               00000004
+RA5                               00000005
+RB0                               00000000
+RB1                               00000001
+RB2                               00000002
+RB3                               00000003
+RB4                               00000004
+RB5                               00000005
+RB6                               00000006
+RB7                               00000007
+RBIE                              00000003
+RBIF                              00000000
+RC0                               00000000
+RC1                               00000001
+RC2                               00000002
+RC3                               00000003
+RC4                               00000004
+RC5                               00000005
+RC6                               00000006
+RC7                               00000007
+RC8_9                             00000006
+RC9                               00000006
+RCD8                              00000000
+RCEN                              00000003
+RCIE                              00000005
+RCIF                              00000005
+RCREG                             0000001A
+RCSTA                             00000018
+RD                                00000000
+RD0                               00000000
+RD1                               00000001
+RD2                               00000002
+RD3                               00000003
+RD4                               00000004
+RD5                               00000005
+RD6                               00000006
+RD7                               00000007
+RE0                               00000000
+RE1                               00000001
+RE2                               00000002
+READ_WRITE                        00000002
+RH                                00000028
+RL                                00000027
+RP0                               00000005
+RP1                               00000006
+RSEN                              00000001
+RX9                               00000006
+RX9D                              00000000
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE  9
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+R_NOT_W                           00000002
+R_W                               00000002
+Receive                           00000073
+S                                 00000003
+SEN                               00000000
+SMP                               00000007
+SPBRG                             00000099
+SPEN                              00000007
+SREN                              00000005
+SSPADD                            00000093
+SSPBUF                            00000013
+SSPCON                            00000014
+SSPCON2                           00000091
+SSPEN                             00000005
+SSPIE                             00000003
+SSPIF                             00000003
+SSPM0                             00000000
+SSPM1                             00000001
+SSPM2                             00000002
+SSPM3                             00000003
+SSPOV                             00000006
+SSPSTAT                           00000094
+START                             00000005
+STATUS                            00000003
+SYNC                              00000004
+T0CS                              00000005
+T0IE                              00000005
+T0IF                              00000002
+T0SE                              00000004
+T1CKPS0                           00000004
+T1CKPS1                           00000005
+T1CON                             00000010
+T1INSYNC                          00000002
+T1OSCEN                           00000003
+T1SYNC                            00000002
+T2CKPS0                           00000000
+T2CKPS1                           00000001
+T2CON                             00000012
+TEMP1                             00000029
+TEMP2                             0000002A
+TEMP3                             0000002B
+TMR0                              00000001
+TMR0IE                            00000005
+TMR0IF                            00000002
+TMR1                              0000000E
+TMR1CS                            00000001
+TMR1H                             0000000F
+TMR1IE                            00000000
+TMR1IF                            00000000
+TMR1L                             0000000E
+TMR1ON                            00000000
+TMR2                              00000011
+TMR2IE                            00000001
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE 10
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TMR2IF                            00000001
+TMR2ON                            00000002
+TOUTPS0                           00000003
+TOUTPS1                           00000004
+TOUTPS2                           00000005
+TOUTPS3                           00000006
+TRISA                             00000085
+TRISA0                            00000000
+TRISA1                            00000001
+TRISA2                            00000002
+TRISA3                            00000003
+TRISA4                            00000004
+TRISA5                            00000005
+TRISB                             00000086
+TRISB0                            00000000
+TRISB1                            00000001
+TRISB2                            00000002
+TRISB3                            00000003
+TRISB4                            00000004
+TRISB5                            00000005
+TRISB6                            00000006
+TRISB7                            00000007
+TRISC                             00000087
+TRISC0                            00000000
+TRISC1                            00000001
+TRISC2                            00000002
+TRISC3                            00000003
+TRISC4                            00000004
+TRISC5                            00000005
+TRISC6                            00000006
+TRISC7                            00000007
+TRISD                             00000088
+TRISD0                            00000000
+TRISD1                            00000001
+TRISD2                            00000002
+TRISD3                            00000003
+TRISD4                            00000004
+TRISD5                            00000005
+TRISD6                            00000006
+TRISD7                            00000007
+TRISE                             00000089
+TRISE0                            00000000
+TRISE1                            00000001
+TRISE2                            00000002
+TRMT                              00000001
+TX8_9                             00000006
+TX9                               00000006
+TX9D                              00000000
+TXD8                              00000000
+TXEN                              00000005
+TXIE                              00000004
+TXIF                              00000004
+TXREG                             00000019
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE 11
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+TXSTA                             00000098
+UA                                00000001
+W                                 00000000
+WCOL                              00000007
+WR                                00000001
+WREN                              00000002
+WRERR                             00000003
+Z                                 00000002
+_BODEN_OFF                        00003FBF
+_BODEN_ON                         00003FFF
+_BOREN_OFF                        00003FBF
+_BOREN_ON                         00003FFF
+_CONFIG                           00002007
+_CPD_OFF                          00003FFF
+_CPD_ON                           00003EFF
+_CP_ALL                           00001FFF
+_CP_OFF                           00003FFF
+_CP_ON                            00001FFF
+_DEBUG_OFF                        00003FFF
+_DEBUG_ON                         000037FF
+_DEVID1                           00002006
+_FOSC_EXTRC                       00003FFF
+_FOSC_HS                          00003FFE
+_FOSC_LP                          00003FFC
+_FOSC_XT                          00003FFD
+_HS_OSC                           00003FFE
+_IDLOC0                           00002000
+_IDLOC1                           00002001
+_IDLOC2                           00002002
+_IDLOC3                           00002003
+_LP_OSC                           00003FFC
+_LVP_OFF                          00003F7F
+_LVP_ON                           00003FFF
+_PWRTE_OFF                        00003FFF
+_PWRTE_ON                         00003FF7
+_RC_OSC                           00003FFF
+_WDTE_OFF                         00003FFB
+_WDTE_ON                          00003FFF
+_WDT_OFF                          00003FFB
+_WDT_ON                           00003FFF
+_WRT_1FOURTH                      00003BFF
+_WRT_256                          00003DFF
+_WRT_HALF                         000039FF
+_WRT_OFF                          00003FFF
+_XT_OSC                           00003FFD
+__16F877A                         00000001
+__DEBUG                           1
+check                             0000002C
+load                              00000083
+loop                              00000075
+loop1                             0000002A
+timer0                            0000007B
+MPASM  5.51                  RECEIVER_PIC.ASM   1-7-2023  17:49:18         PAGE 12
+
+
+MEMORY USAGE MAP ('X' = Used,  '-' = Unused)
+
+
+0000 : X---XXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0040 : XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX XXXXXXXXXXXXXXXX
+0080 : XXXXXX---------- ---------------- ---------------- ----------------
+
+All other memory blocks unused.
+
+Program Memory Words Used:   131
+Program Memory Words Free:  8061
+
+
+Errors   :     0
+Warnings :     1 reported,     0 suppressed
+Messages :     9 reported,     0 suppressed
+
+

@@ -1,0 +1,19 @@
+# MPLAB IDE generated this makefile for use with GNU make.
+# Project: EmbeddedProject.mcp
+# Date: Fri Jan 06 20:01:57 2023
+
+AS = MPASMWIN.exe
+CC = 
+LD = mplink.exe
+AR = mplib.exe
+RM = rm
+
+Embedded_Project.cof : Embedded_Project.o
+	$(CC) /p16F877A "Embedded_Project.o" /u_DEBUG /z__MPLAB_BUILD=1 /z__MPLAB_DEBUG=1 /o"Embedded_Project.cof" /M"Embedded_Project.map" /W /x
+
+Embedded_Project.o : Embedded_Project.asm C:/Program\ Files\ (x86)/Microchip/MPASM\ Suite/P16F877A.inc
+	$(AS) /q /p16F877A "Embedded_Project.asm" /l"Embedded_Project.lst" /e"Embedded_Project.err" /d__DEBUG=1
+
+clean : 
+	$(CC) "Embedded_Project.o" "Embedded_Project.hex" "Embedded_Project.err" "Embedded_Project.lst" "Embedded_Project.cof"
+

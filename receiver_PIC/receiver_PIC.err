@@ -1,0 +1,10 @@
+Message[302] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 45 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 47 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 48 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 49 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 50 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 51 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 52 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 54 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 56 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] D:\EMBEDDED_PROJECT0\RECEIVER_PIC\RECEIVER_PIC.ASM 176 : Found directive in column 1. (end)

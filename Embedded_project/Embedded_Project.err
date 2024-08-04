@@ -1,0 +1,12 @@
+Message[302] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 38 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 42 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 43 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 44 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 46 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 48 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Message[302] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 49 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 176 : Found directive in column 1. (banksel)
+Message[302] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 177 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 205 : Found directive in column 1. (banksel)
+Message[302] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 206 : Register in operand not in bank 0.  Ensure that bank bits are correct.
+Warning[205] D:\EMBEDDED_PROJECT0\EMBEDDED_PROJECT\EMBEDDED_PROJECT.ASM 210 : Found directive in column 1. (end)

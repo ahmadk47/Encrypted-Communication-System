@@ -1,0 +1,66 @@
+Decrypt clrw
+	movlw D'2'
+	movwf NumOfRounds
+	bcf STATUS,C
+LOOP1
+	movf RL, W
+	movwf TEMP1
+	btfsc RH, 0
+	bsf STATUS, C
+	rrf  RL, W
+	movwf RL
+	bcf STATUS, C
+	btfsc TEMP1,0
+	bsf STATUS, C
+	rrf RH, W
+	movwf RH
+	movf RL, W	
+	xorwf Key3L, W
+	movwf RL
+	movf RH, W
+	xorwf Key3H, W
+	movwf RH
+	bcf STATUS, C
+
+	movf RL, W
+	movwf TEMP2
+	btfsc RH, 0
+	bsf STATUS, C
+	rrf  RL, W
+	movwf RL
+	bcf STATUS, C
+	btfsc TEMP2,0
+	bsf STATUS, C
+	rrf RH, W
+	movwf RH
+	movf RL, W	
+	xorwf Key2L, W
+	movwf RL
+	movf RH, W
+	xorwf Key2H, W
+	movwf RH
+	bcf STATUS,C
+	
+	movf RL, W
+	movwf TEMP3
+	btfsc RH, 0
+	bsf STATUS, C
+	rrf  RL, W
+	movwf RL
+	bcf STATUS, C
+	btfsc TEMP3,0
+	bsf STATUS, C
+	rrf RH, W
+	movwf RH
+	movf RL, W	
+	xorwf Key1L, W
+	movwf RL
+	movf RH, W
+	xorwf Key1H, W
+	movwf RH
+	bcf STATUS, C
+
+	decfsz NumOfRounds ,1
+	goto LOOP1
+	goto START_TRANSMITTING
+	
